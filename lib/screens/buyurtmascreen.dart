@@ -178,7 +178,7 @@ class _OrderPageState extends State<OrderPage> {
             ),
           ),
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "Buyurtmalar ro'yxati",
@@ -197,6 +197,7 @@ class _OrderPageState extends State<OrderPage> {
                           .toList();
                       return ListView(
                         shrinkWrap: true,
+                         physics: const NeverScrollableScrollPhysics(),
                         children: filteredDocs.map((e) {
                           return Card(
                               child: Column(children: [
@@ -225,7 +226,7 @@ class _OrderPageState extends State<OrderPage> {
                         }).toList(),
                       );
                     }
-
+                
                     return const Center(
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
