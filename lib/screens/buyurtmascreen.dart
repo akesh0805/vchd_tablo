@@ -121,49 +121,57 @@ class _OrderPageState extends State<OrderPage> {
                     stream: collectionReference,
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
+                      int selectedIndex =
+                          -1; // Initialize selectedIndex to -1 to represent no selection
                       if (snapshot.hasData) {
-                        return ListView(
+                        return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          children: snapshot.data!.docs.map((e) {
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var e = snapshot.data!.docs[index].data()
+                                as Map<String, dynamic>;
                             return GestureDetector(
                               onTap: () {
-                                print("Select");
                                 setState(() {
+                                  selectedIndex =
+                                      index; // Update selectedIndex on tap
                                   tmahsulot = e["mahsulot_nomi"];
                                 });
                               },
                               child: Card(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      title: Text(e["mahsulot_nomi"]),
-                                      trailing: IconButton(
-                                          onPressed: () async {
-                                            var response = await FirebaseCrud
-                                                .deleteEmployee(docId: e.id);
-                                            if (response.code != 200) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    content: Text(response
-                                                        .message
-                                                        .toString()),
-                                                  );
-                                                },
-                                              );
-                                            }
+                                color: selectedIndex == index
+                                    ? Colors.red
+                                    : null, // Set background color based on selectedIndex
+                                child: ListTile(
+                                  textColor: selectedIndex == index
+                                      ? Colors.red
+                                      : null,
+                                  title: Text(e["mahsulot_nomi"]),
+                                  trailing: IconButton(
+                                    onPressed: () async {
+                                      var response =
+                                          await FirebaseCrud.deleteEmployee(
+                                              docId: snapshot
+                                                  .data!.docs[index].id);
+                                      if (response.code != 200) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              content: Text(
+                                                  response.message.toString()),
+                                            );
                                           },
-                                          icon:
-                                              const Icon(Icons.delete_rounded)),
-                                    ),
-                                  ],
+                                        );
+                                      }
+                                    },
+                                    icon: const Icon(Icons.delete_rounded),
+                                  ),
                                 ),
                               ),
                             );
-                          }).toList(),
+                          },
                         );
                       }
                       return const Center(
@@ -197,7 +205,7 @@ class _OrderPageState extends State<OrderPage> {
                           .toList();
                       return ListView(
                         shrinkWrap: true,
-                         physics: const NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children: filteredDocs.map((e) {
                           return Card(
                               child: Column(children: [
@@ -226,7 +234,7 @@ class _OrderPageState extends State<OrderPage> {
                         }).toList(),
                       );
                     }
-                
+
                     return const Center(
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
