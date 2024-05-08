@@ -14,7 +14,7 @@ class Seh with ChangeNotifier  {
 }
 
 class Sehs with ChangeNotifier {
-  List<Seh> _list = [
+  final List<Seh> _list = [
     Seh(id: 's1', title: "G'ildirak juftliklarini ta'mirlash sexi  (КРЦ)", tarif: ""),
     Seh(id: 's2', title: "Telejkalarini ta'mirlash sexi  (ТЦ)", tarif: ""),
     Seh(id: 's3', title: "Avtobirikmalarini ta'mirlash sexi  (КПА)", tarif: ""),
@@ -31,3 +31,4 @@ void addSeh(){
 }
 
 }
+

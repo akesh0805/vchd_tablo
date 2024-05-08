@@ -10,6 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sehData = Provider.of<Sehs>(context);
+
     final sehlar = sehData.list;
     return Scaffold(
       appBar: AppBar(
@@ -44,16 +45,39 @@ class HomeScreen extends StatelessWidget {
             childAspectRatio: 2 / 1,
             crossAxisCount: 2),
         itemBuilder: (context, index) {
+          final seh = sehData.list[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OrderPage(),
+                  builder: (context) => OrderPage(
+                    sehName: seh.id,
+                  ),
                 ),
               );
             },
             child: GridTile(
+              header: const Text(
+                "Qo'qon Vagon Deposi",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              footer: GridTileBar(
+                leading: const Icon(
+                  Icons.construction,
+                  size: 30,
+                ),
+                title: Text(
+                  sehlar[index].title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                backgroundColor: Colors.black54,
+              ),
               child: Container(
                 decoration: BoxDecoration(
                     boxShadow: [
@@ -65,33 +89,13 @@ class HomeScreen extends StatelessWidget {
                         blurStyle: BlurStyle.normal,
                       ),
                     ],
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20))),
                 child: Container(
-                  padding:  EdgeInsets.only(top: 30, bottom: 55),
+                  padding: const EdgeInsets.only(top: 30, bottom: 55),
                   child: Image.asset('assets/images/logo.png'),
                 ),
-              ),
-              header: Text(
-                "Qo'qon Vagon Deposi",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-              footer: GridTileBar(
-                leading: Icon(
-                  Icons.construction,
-                  size: 30,
-                ),
-                title: Text(
-                  sehlar[index].title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                backgroundColor: Colors.black54,
               ),
             ),
           );
