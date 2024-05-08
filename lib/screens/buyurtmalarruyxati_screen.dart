@@ -50,7 +50,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "ВСЦ",
@@ -65,6 +65,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .where((doc) => doc["id"] == s1)
                           .toList();
                       return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: filteredDocs.map((e) {
                           return Card(
@@ -106,7 +107,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             ),
           ),
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "КРЦ",
@@ -122,6 +123,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .toList();
                       return ListView(
                         shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         children: filteredDocs.map((e) {
                           return Card(
                               child: Column(children: [
@@ -162,7 +164,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             ),
           ),
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "ТЦ",
@@ -177,6 +179,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .where((doc) => doc["id"] == s3)
                           .toList();
                       return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: filteredDocs.map((e) {
                           return Card(
@@ -218,7 +221,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             ),
           ),
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "КПА",
@@ -233,6 +236,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .where((doc) => doc["id"] == s4)
                           .toList();
                       return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: filteredDocs.map((e) {
                           return Card(
@@ -274,7 +278,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             ),
           ),
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   "АКП",
@@ -289,6 +293,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .where((doc) => doc["id"] == s5)
                           .toList();
                       return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         children: filteredDocs.map((e) {
                           return Card(
