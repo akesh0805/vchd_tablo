@@ -26,20 +26,20 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ElevatedButton.icon(icon: Icon(Icons.list_alt),
+              ElevatedButton.icon(icon: const Icon(Icons.list_alt),
                 onPressed: (){
                   Navigator.pushNamed(context, HomeScreen.id);
-                },  label:Text("Buyurtma berish")),
+                },  label:const Text("Buyurtma berish")),
                 
-              ElevatedButton.icon(icon: Icon(Icons.list),
+              ElevatedButton.icon(icon: const Icon(Icons.list),
                 onPressed: (){
                   Navigator.pushNamed(context, ZakazlarScreen.id);
-                },  label:Text("Buyurtmalar ro'yxati")),
+                },  label:const Text("Buyurtmalar ro'yxati")),
                 
-              ElevatedButton.icon(icon: Icon(Icons.add),
+              ElevatedButton.icon(icon: const Icon(Icons.add),
                 onPressed: (){
                   Navigator.pushNamed(context, AddProduct.id);
-                },  label:Text("Maxsulot qo'shish")),
+                },  label:const Text("Maxsulot qo'shish")),
             ],
           ),
         ],

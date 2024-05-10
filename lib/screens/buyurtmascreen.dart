@@ -1,8 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:vchd_tablo/services/firebase_buyurtmalar.dart';
 
-class OrderPage extends StatelessWidget {
-  const OrderPage({super.key});
-  static final id = "Zakazlar ekrani";
+import '../services/firebase_crud.dart';
+
+class OrderPage extends StatefulWidget {
+  final String sehName;
+  const OrderPage({super.key, required this.sehName});
+  static const id = "Zakazlar ekrani";
+
+  @override
+  State<OrderPage> createState() => _OrderPageState();
+}
+
+class _OrderPageState extends State<OrderPage> {
+  final mahsulotsoni = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readEmployee();
+  final Stream<QuerySnapshot> collectionReference2 =
+      FirebaseCrudBuyurtmalar.readEmployee();
+  String tmahsulot = "tanlanmagan";
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,60 +45,205 @@ class OrderPage extends StatelessWidget {
           child: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Column(
-            children: [
-              Text(
-                "Buyurtma qo'shish",
-                style: TextStyle(
-                  fontSize: 25,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: 600,
-                child: ExpansionTile(
-                  title: Text('Maxsulotni tanlang'),
-                  children: [
-                    ListTile(
-                      title: Text('max 1'),
-                    ),
-                    ListTile(
-                      title: Text('max 2'),
-                    ),
-                  ],
-                ),
-              ),
-              
-              SizedBox(
-                width: 600,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Maxsulot sonini kiriting",
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  const Text(
+                    "Buyurtma qo'shish",
+                    style: TextStyle(
+                      fontSize: 25,
                     ),
                   ),
-                ),
+                  const Divider(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: mahsulotsoni,
+                    autofocus: false,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Maxsulot sonini kiriting...")),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        var response =
+                            await FirebaseCrudBuyurtmalar.addEmployee(
+                          name: tmahsulot,
+                          count: mahsulotsoni.text,
+                          id: widget.sehName,
+                        );
+                        if (response.code != 200) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text(response.message.toString()),
+                                );
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text(response.message.toString()),
+                                );
+                              });
+                        }
+                      }
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Tanlangan mahsulot -- $tmahsulot",
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  StreamBuilder(
+                    stream: collectionReference,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      int selectedIndex =
+                          -1; // Initialize selectedIndex to -1 to represent no selection
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var e = snapshot.data!.docs[index].data()
+                                as Map<String, dynamic>;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex =
+                                      index; // Update selectedIndex on tap
+                                  tmahsulot = e["mahsulot_nomi"];
+                                });
+                              },
+                              child: Card(
+                                color: selectedIndex == index
+                                    ? Colors.red
+                                    : null, // Set background color based on selectedIndex
+                                child: ListTile(
+                                  textColor: selectedIndex == index
+                                      ? Colors.red
+                                      : null,
+                                  title: Text(e["mahsulot_nomi"]),
+                                  trailing: IconButton(
+                                    onPressed: () async {
+                                      var response =
+                                          await FirebaseCrud.deleteEmployee(
+                                              docId: snapshot
+                                                  .data!.docs[index].id);
+                                      if (response.code != 200) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              content: Text(
+                                                  response.message.toString()),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    icon: const Icon(Icons.delete_rounded),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-              FloatingActionButton(
-                onPressed: () {},
-                child: Icon(Icons.add),
-              )
-            ],
+            ),
           ),
-          Column(
-            children: [
-              Text(
-                "Buyurtmalar ro'yxati",
-                style: TextStyle(
-                  fontSize: 25,
+          Expanded(
+            child: ListView(
+              children: [
+                const Text(
+                  "Buyurtmalar ro'yxati",
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
                 ),
-              ),
-            ],
+                const Divider(),
+                StreamBuilder(
+                  stream: collectionReference2,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      var filteredDocs = snapshot.data!.docs
+                          .where((doc) => doc["id"] == widget.sehName)
+                          .toList();
+                      return ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: filteredDocs.map((e) {
+                          return Card(
+                              child: Column(children: [
+                            ListTile(
+                              title: Text(e["mahsulot_nomi"]),
+                              subtitle: Text(e["count"]),
+                              trailing: IconButton(
+                                  onPressed: () async {
+                                    var response = await FirebaseCrudBuyurtmalar
+                                        .deleteEmployee(docId: e.id);
+                                    if (response.code != 200) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Text(
+                                                response.message.toString()),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  icon: const Icon(Icons.delete_rounded)),
+                            ),
+                          ]));
+                        }).toList(),
+                      );
+                    }
+
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           )
         ],
       )),
