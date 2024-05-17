@@ -60,12 +60,12 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Maxsulot nomini kiriting ...", suffix: Icon(Icons.search)),
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   TextFormField(
                     controller: mahsulotsoni,
                     autofocus: false,

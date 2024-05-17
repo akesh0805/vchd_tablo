@@ -4,7 +4,7 @@ import 'package:vchd_tablo/screens/maxsulorqoshish_screen.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-  static final id = "loginPage";
+  static const id = "loginPage";
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.teal,
         centerTitle: true,
-        title: Text(
+        title:const Text(
           "MAXSULOT QO'SHISH",
           style: TextStyle(
             color: Colors.white,
@@ -49,59 +49,63 @@ class _LoginPageState extends State<LoginPage> {
           // mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               "Maxsulotlarni faqatgina admin qo'shishi yoki o'chirishi mumkin !",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            Text(
+            const Text(
               "Iltimos noto'gri login yoki parol kiritmang !",
               style: TextStyle(
                   fontWeight: FontWeight.bold, fontSize: 25, color: Colors.red),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            SizedBox(
+             SizedBox(
               width: 300,
               child: TextField(
                 controller: _loginController,
-                decoration: InputDecoration(
+                decoration:const  InputDecoration(
                     labelText: "Login",
                     suffix: Icon(Icons.login),
                     border: OutlineInputBorder()),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             SizedBox(
               width: 300,
               child: TextField(
                 controller: _parolController,
-                decoration: InputDecoration(
+                decoration:const InputDecoration(
                     labelText: "Parol",
                     suffix: Icon(Icons.password),
                     border: OutlineInputBorder()),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             ElevatedButton(
               onPressed: (_login) ,
-              child: Text("KIRISH"),
+              child:const Text("KIRISH"),
             ),
-            SizedBox(
+            const SizedBox(
+              height: 15,
+            ),
+             Text(_errorxabar),
+            const SizedBox(
               height: 100,
             ),
             RichText(
-              text: TextSpan(
+              text:const  TextSpan(
                   children: [
                     WidgetSpan(
                         child: Icon(
@@ -112,11 +116,11 @@ class _LoginPageState extends State<LoginPage> {
                   text: "Aloqa uchun konaktlar   ",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             RichText(
-              text: TextSpan(
+              text: const  TextSpan(
                   children: [
                     WidgetSpan(
                       child: Icon(
@@ -132,11 +136,11 @@ class _LoginPageState extends State<LoginPage> {
                   text: "ZamVCHDr:   ",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             RichText(
-              text: TextSpan(
+              text:const TextSpan(
                   children: [
                     WidgetSpan(
                         child: Icon(
