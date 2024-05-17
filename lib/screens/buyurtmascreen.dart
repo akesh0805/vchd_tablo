@@ -22,7 +22,7 @@ class _OrderPageState extends State<OrderPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readEmployee();
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
-  String tmahsulot = "tanlanmagan";
+  String tmahsulot = "Tanlanmagan";
   @override
   void initState() {
     super.initState();
@@ -60,6 +60,12 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(
                     height: 10,
                   ),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Maxsulot nomini kiriting ...", suffix: Icon(Icons.search)),
+                  ),
+                  SizedBox(height: 10,),
                   TextFormField(
                     controller: mahsulotsoni,
                     autofocus: false,
@@ -111,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
                     height: 10,
                   ),
                   Text(
-                    "Tanlangan mahsulot -- $tmahsulot",
+                    "Tanlangan mahsulot:  $tmahsulot",
                     style: const TextStyle(fontSize: 25),
                   ),
                   const SizedBox(
@@ -142,32 +148,32 @@ class _OrderPageState extends State<OrderPage> {
                               child: Card(
                                 color: selectedIndex == index
                                     ? Colors.red
-                                    : null, // Set background color based on selectedIndex
+                                    :null, // Set background color based on selectedIndex
                                 child: ListTile(
                                   textColor: selectedIndex == index
                                       ? Colors.red
                                       : null,
                                   title: Text(e["mahsulot_nomi"]),
-                                  trailing: IconButton(
-                                    onPressed: () async {
-                                      var response =
-                                          await FirebaseCrud.deleteEmployee(
-                                              docId: snapshot
-                                                  .data!.docs[index].id);
-                                      if (response.code != 200) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              content: Text(
-                                                  response.message.toString()),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    icon: const Icon(Icons.delete_rounded),
-                                  ),
+                                  // trailing: IconButton(
+                                  //   onPressed: () async {
+                                  //     var response =
+                                  //         await FirebaseCrud.deleteEmployee(
+                                  //             docId: snapshot
+                                  //                 .data!.docs[index].id);
+                                  //     if (response.code != 200) {
+                                  //       showDialog(
+                                  //         context: context,
+                                  //         builder: (context) {
+                                  //           return AlertDialog(
+                                  //             content: Text(
+                                  //                 response.message.toString()),
+                                  //           );
+                                  //         },
+                                  //       );
+                                  //     }
+                                  //   },
+                                  //   icon: const Icon(Icons.delete_rounded),
+                                  // ),
                                 ),
                               ),
                             );

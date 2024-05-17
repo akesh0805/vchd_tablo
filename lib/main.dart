@@ -7,7 +7,9 @@ import 'package:vchd_tablo/screens/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:vchd_tablo/screens/home_screen.dart';
 import 'package:vchd_tablo/model/item.dart';
+import 'package:vchd_tablo/screens/login_page.dart';
 import 'package:vchd_tablo/screens/maxsulorqoshish_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +41,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
             useMaterial3: true,
+            textTheme: GoogleFonts.exo2TextTheme(),
           ),
           home: const HomePage(),
           routes: {
@@ -49,6 +52,7 @@ class MyApp extends StatelessWidget {
             OrderPage.id: (context) => const OrderPage(sehName: '',),
             ZakazlarScreen.id: (context) => const ZakazlarScreen(),
             AddProduct.id: (context) => const AddProduct(),
+            LoginPage.id:(context) => const LoginPage(),
           },
         ));
   }
