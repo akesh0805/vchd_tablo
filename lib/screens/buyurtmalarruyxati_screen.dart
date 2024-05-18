@@ -46,7 +46,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward1
           ? scrollController1.position.maxScrollExtent
           : scrollController1.position.minScrollExtent,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10),
       curve: Curves.linear,
     )
         .then((_) {
@@ -61,7 +61,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward2
           ? scrollController2.position.maxScrollExtent
           : scrollController2.position.minScrollExtent,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10),
       curve: Curves.linear,
     )
         .then((_) {
@@ -76,7 +76,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward3
           ? scrollController3.position.maxScrollExtent
           : scrollController3.position.minScrollExtent,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10),
       curve: Curves.linear,
     )
         .then((_) {
@@ -91,7 +91,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward4
           ? scrollController4.position.maxScrollExtent
           : scrollController4.position.minScrollExtent,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10),
       curve: Curves.linear,
     )
         .then((_) {
@@ -106,7 +106,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward5
           ? scrollController5.position.maxScrollExtent
           : scrollController5.position.minScrollExtent,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10),
       curve: Curves.linear,
     )
         .then((_) {
