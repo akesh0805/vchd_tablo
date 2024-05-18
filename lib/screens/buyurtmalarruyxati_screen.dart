@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,47 +17,39 @@ class ZakazlarScreen extends StatefulWidget {
 class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
-  final ScrollController _scrollController = ScrollController();
-  late Timer _timer;
-  bool _scrollToBottom = true;
+  final ScrollController scrollController = ScrollController();
+  bool scrollingForward = true;
 
   @override
   void initState() {
     super.initState();
-    _startAutoScroll();
+    _startScrolling();
   }
 
-  void _startAutoScroll() {
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (_scrollToBottom) {
-        _scrollDown();
-      } else {
-        _scrollUp();
-      }
-      _scrollToBottom = !_scrollToBottom;
+  void _startScrolling() {
+    Future.delayed(const Duration(seconds: 1), () {
+      _scroll();
     });
   }
 
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollUp() {
-    _scrollController.animateTo(
-      _scrollController.position.minScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-    );
+  void _scroll() {
+    scrollController
+        .animateTo(
+      scrollingForward
+          ? scrollController.position.maxScrollExtent
+          : scrollController.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.linear,
+    )
+        .then((_) {
+      scrollingForward = !scrollingForward;
+      _scroll(); // Call _scroll again to continue the loop
+    });
   }
 
   @override
   void dispose() {
-    _timer.cancel();
-    _scrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -75,7 +65,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     String s3 = "s3";
     String s4 = "s4";
     String s5 = "s5";
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -98,327 +87,388 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 const Text(
                   "ВСЦ",
                   style: TextStyle(fontSize: 35),
                 ),
-                StreamBuilder(
-                  stream: collectionReference2,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      var filteredDocs = snapshot.data!.docs
-                          .where((doc) => doc["id"] == s1)
-                          .toList();
-                      return ListView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                         controller: _scrollController,
-                        children: filteredDocs.map((e) {
-                          return Card(
-                              child: Column(children: [
-                            ListTile(
-                              title: Text(
-                                e["mahsulot_nomi"].toString().toUpperCase(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              subtitle: Text(
-                                e["count"],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    var response = await FirebaseCrudBuyurtmalar
-                                        .deleteEmployee(docId: e.id);
-                                    if (response.code != 200) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                response.message.toString()),
-                                          );
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    children: [
+                      StreamBuilder(
+                        stream: collectionReference2,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            var filteredDocs = snapshot.data!.docs
+                                .where((doc) => doc["id"] == s1)
+                                .toList();
+                            return ListView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: filteredDocs.map((e) {
+                                return Card(
+                                    child: Column(children: [
+                                  ListTile(
+                                    title: Text(
+                                      e["mahsulot_nomi"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    subtitle: Text(
+                                      e["count"],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          var response =
+                                              await FirebaseCrudBuyurtmalar
+                                                  .deleteEmployee(docId: e.id);
+                                          if (response.code != 200) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Text(response.message
+                                                      .toString()),
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete_rounded)),
-                            ),
-                          ]));
-                        }).toList(),
-                      );
-                    }
+                                        icon: const Icon(Icons.delete_rounded)),
+                                  ),
+                                ]));
+                              }).toList(),
+                            );
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 const Text(
                   "КРЦ",
                   style: TextStyle(fontSize: 35),
                 ),
-                StreamBuilder(
-                  stream: collectionReference2,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      var filteredDocs = snapshot.data!.docs
-                          .where((doc) => doc["id"] == s2)
-                          .toList();
-                      return ListView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: filteredDocs.map((e) {
-                          return Card(
-                              child: Column(children: [
-                            ListTile(
-                              title: Text(
-                                e["mahsulot_nomi"].toString().toUpperCase(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              subtitle: Text(
-                                e["count"],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    var response = await FirebaseCrudBuyurtmalar
-                                        .deleteEmployee(docId: e.id);
-                                    if (response.code != 200) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                response.message.toString()),
-                                          );
+                Expanded(
+                  child: ListView(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    children: [
+                      StreamBuilder(
+                        stream: collectionReference2,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            var filteredDocs = snapshot.data!.docs
+                                .where((doc) => doc["id"] == s2)
+                                .toList();
+                            return ListView(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: filteredDocs.map((e) {
+                                return Card(
+                                    child: Column(children: [
+                                  ListTile(
+                                    title: Text(
+                                      e["mahsulot_nomi"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    subtitle: Text(
+                                      e["count"],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          var response =
+                                              await FirebaseCrudBuyurtmalar
+                                                  .deleteEmployee(docId: e.id);
+                                          if (response.code != 200) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Text(response.message
+                                                      .toString()),
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete_rounded)),
-                            ),
-                          ]));
-                        }).toList(),
-                      );
-                    }
+                                        icon: const Icon(Icons.delete_rounded)),
+                                  ),
+                                ]));
+                              }).toList(),
+                            );
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 const Text(
                   "ТЦ",
                   style: TextStyle(fontSize: 35),
                 ),
-                StreamBuilder(
-                  stream: collectionReference2,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      var filteredDocs = snapshot.data!.docs
-                          .where((doc) => doc["id"] == s3)
-                          .toList();
-                      return ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: filteredDocs.map((e) {
-                          return Card(
-                              child: Column(children: [
-                            ListTile(
-                              title: Text(
-                                e["mahsulot_nomi"].toString().toUpperCase(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              subtitle: Text(
-                                e["count"],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    var response = await FirebaseCrudBuyurtmalar
-                                        .deleteEmployee(docId: e.id);
-                                    if (response.code != 200) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                response.message.toString()),
-                                          );
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      StreamBuilder(
+                        stream: collectionReference2,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            var filteredDocs = snapshot.data!.docs
+                                .where((doc) => doc["id"] == s3)
+                                .toList();
+                            return ListView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: filteredDocs.map((e) {
+                                return Card(
+                                    child: Column(children: [
+                                  ListTile(
+                                    title: Text(
+                                      e["mahsulot_nomi"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    subtitle: Text(
+                                      e["count"],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          var response =
+                                              await FirebaseCrudBuyurtmalar
+                                                  .deleteEmployee(docId: e.id);
+                                          if (response.code != 200) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Text(response.message
+                                                      .toString()),
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete_rounded)),
-                            ),
-                          ]));
-                        }).toList(),
-                      );
-                    }
+                                        icon: const Icon(Icons.delete_rounded)),
+                                  ),
+                                ]));
+                              }).toList(),
+                            );
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 const Text(
                   "КПА",
                   style: TextStyle(fontSize: 35),
                 ),
-                StreamBuilder(
-                  stream: collectionReference2,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      var filteredDocs = snapshot.data!.docs
-                          .where((doc) => doc["id"] == s4)
-                          .toList();
-                      return ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: filteredDocs.map((e) {
-                          return Card(
-                              child: Column(children: [
-                            ListTile(
-                              title: Text(
-                                e["mahsulot_nomi"].toString().toUpperCase(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              subtitle: Text(
-                                e["count"],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    var response = await FirebaseCrudBuyurtmalar
-                                        .deleteEmployee(docId: e.id);
-                                    if (response.code != 200) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                response.message.toString()),
-                                          );
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      StreamBuilder(
+                        stream: collectionReference2,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            var filteredDocs = snapshot.data!.docs
+                                .where((doc) => doc["id"] == s4)
+                                .toList();
+                            return ListView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: filteredDocs.map((e) {
+                                return Card(
+                                    child: Column(children: [
+                                  ListTile(
+                                    title: Text(
+                                      e["mahsulot_nomi"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    subtitle: Text(
+                                      e["count"],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          var response =
+                                              await FirebaseCrudBuyurtmalar
+                                                  .deleteEmployee(docId: e.id);
+                                          if (response.code != 200) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Text(response.message
+                                                      .toString()),
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete_rounded)),
-                            ),
-                          ]));
-                        }).toList(),
-                      );
-                    }
+                                        icon: const Icon(Icons.delete_rounded)),
+                                  ),
+                                ]));
+                              }).toList(),
+                            );
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 const Text(
                   "АКП",
                   style: TextStyle(fontSize: 35),
                 ),
-                StreamBuilder(
-                  stream: collectionReference2,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      var filteredDocs = snapshot.data!.docs
-                          .where((doc) => doc["id"] == s5)
-                          .toList();
-                      return ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: filteredDocs.map((e) {
-                          return Card(
-                              child: Column(children: [
-                            ListTile(
-                              title: Text(
-                                e["mahsulot_nomi"].toString().toUpperCase(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              subtitle: Text(
-                                e["count"],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 25),
-                              ),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    var response = await FirebaseCrudBuyurtmalar
-                                        .deleteEmployee(docId: e.id);
-                                    if (response.code != 200) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                response.message.toString()),
-                                          );
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      StreamBuilder(
+                        stream: collectionReference2,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            var filteredDocs = snapshot.data!.docs
+                                .where((doc) => doc["id"] == s5)
+                                .toList();
+                            return ListView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: filteredDocs.map((e) {
+                                return Card(
+                                    child: Column(children: [
+                                  ListTile(
+                                    title: Text(
+                                      e["mahsulot_nomi"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    subtitle: Text(
+                                      e["count"],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          var response =
+                                              await FirebaseCrudBuyurtmalar
+                                                  .deleteEmployee(docId: e.id);
+                                          if (response.code != 200) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Text(response.message
+                                                      .toString()),
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete_rounded)),
-                            ),
-                          ]));
-                        }).toList(),
-                      );
-                    }
+                                        icon: const Icon(Icons.delete_rounded)),
+                                  ),
+                                ]));
+                              }).toList(),
+                            );
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
