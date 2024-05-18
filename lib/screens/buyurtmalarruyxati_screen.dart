@@ -17,8 +17,16 @@ class ZakazlarScreen extends StatefulWidget {
 class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
-  final ScrollController scrollController = ScrollController();
-  bool scrollingForward = true;
+  final ScrollController scrollController1 = ScrollController();
+  final ScrollController scrollController2 = ScrollController();
+  final ScrollController scrollController3 = ScrollController();
+  final ScrollController scrollController4 = ScrollController();
+  final ScrollController scrollController5 = ScrollController();
+  bool scrollingForward1 = true;
+  bool scrollingForward2 = true;
+  bool scrollingForward3 = true;
+  bool scrollingForward4 = true;
+  bool scrollingForward5 = true;
 
   @override
   void initState() {
@@ -28,28 +36,93 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
 
   void _startScrolling() {
     Future.delayed(const Duration(seconds: 1), () {
-      _scroll();
+      _scroll1();
     });
   }
 
-  void _scroll() {
-    scrollController
+  void _scroll1() {
+    scrollController1
         .animateTo(
-      scrollingForward
-          ? scrollController.position.maxScrollExtent
-          : scrollController.position.minScrollExtent,
+      scrollingForward1
+          ? scrollController1.position.maxScrollExtent
+          : scrollController1.position.minScrollExtent,
       duration: const Duration(seconds: 2),
       curve: Curves.linear,
     )
         .then((_) {
-      scrollingForward = !scrollingForward;
-      _scroll(); // Call _scroll again to continue the loop
+      scrollingForward1 = !scrollingForward1;
+      _scroll1(); // Call _scroll1 again to continue the loop
+    });
+  }
+
+  void _scroll2() {
+    scrollController2
+        .animateTo(
+      scrollingForward2
+          ? scrollController2.position.maxScrollExtent
+          : scrollController2.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.linear,
+    )
+        .then((_) {
+      scrollingForward2 = !scrollingForward2;
+      _scroll2(); // Call _scroll2 again to continue the loop
+    });
+  }
+
+  void _scroll3() {
+    scrollController3
+        .animateTo(
+      scrollingForward3
+          ? scrollController3.position.maxScrollExtent
+          : scrollController3.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.linear,
+    )
+        .then((_) {
+      scrollingForward3 = !scrollingForward3;
+      _scroll3(); // Call _scroll3 again to continue the loop
+    });
+  }
+
+  void _scroll4() {
+    scrollController4
+        .animateTo(
+      scrollingForward4
+          ? scrollController4.position.maxScrollExtent
+          : scrollController4.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.linear,
+    )
+        .then((_) {
+      scrollingForward4 = !scrollingForward4;
+      _scroll4(); // Call _scroll4 again to continue the loop
+    });
+  }
+
+  void _scroll5() {
+    scrollController5
+        .animateTo(
+      scrollingForward5
+          ? scrollController5.position.maxScrollExtent
+          : scrollController5.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.linear,
+    )
+        .then((_) {
+      scrollingForward5 = !scrollingForward5;
+      _scroll5(); // Call _scroll5 again to continue the loop
     });
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    scrollController1.dispose();
+    scrollController2.dispose();
+    scrollController3.dispose();
+    scrollController4.dispose();
+    scrollController5.dispose();
+
     super.dispose();
   }
 
@@ -96,7 +169,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 Expanded(
                   child: ListView(
                     shrinkWrap: true,
-                    controller: scrollController,
+                    controller: scrollController1,
                     children: [
                       StreamBuilder(
                         stream: collectionReference2,
@@ -173,8 +246,8 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    controller: scrollController,
                     shrinkWrap: true,
+                    controller: scrollController2,
                     children: [
                       StreamBuilder(
                         stream: collectionReference2,
@@ -251,6 +324,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
+                    controller: scrollController3,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -328,6 +402,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
+                    controller: scrollController4,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -405,6 +480,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
+                    controller: scrollController5,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
