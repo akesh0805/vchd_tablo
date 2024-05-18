@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,50 @@ class ZakazlarScreen extends StatefulWidget {
 class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
+  final ScrollController _scrollController = ScrollController();
+  late Timer _timer;
+  bool _scrollToBottom = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (_scrollToBottom) {
+        _scrollDown();
+      } else {
+        _scrollUp();
+      }
+      _scrollToBottom = !_scrollToBottom;
+    });
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _scrollUp() {
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -29,6 +75,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     String s3 = "s3";
     String s4 = "s4";
     String s5 = "s5";
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -51,7 +98,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            
             child: ListView(
               children: [
                 const Text(
@@ -67,14 +113,23 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           .where((doc) => doc["id"] == s1)
                           .toList();
                       return ListView(
-                        physics:AlwaysScrollableScrollPhysics(),
+                        physics: const AlwaysScrollableScrollPhysics(),
                         shrinkWrap: true,
+                         controller: _scrollController,
                         children: filteredDocs.map((e) {
                           return Card(
                               child: Column(children: [
                             ListTile(
-                              title: Text(e["mahsulot_nomi"].toString().toUpperCase(),style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                              subtitle: Text(e["count"],style:const  TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              title: Text(
+                                e["mahsulot_nomi"].toString().toUpperCase(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
+                              subtitle: Text(
+                                e["count"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
                               trailing: IconButton(
                                   onPressed: () async {
                                     var response = await FirebaseCrudBuyurtmalar
@@ -130,8 +185,16 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           return Card(
                               child: Column(children: [
                             ListTile(
-                              title: Text(e["mahsulot_nomi"].toString().toUpperCase(),style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                              subtitle: Text(e["count"],style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              title: Text(
+                                e["mahsulot_nomi"].toString().toUpperCase(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
+                              subtitle: Text(
+                                e["count"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
                               trailing: IconButton(
                                   onPressed: () async {
                                     var response = await FirebaseCrudBuyurtmalar
@@ -187,8 +250,16 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           return Card(
                               child: Column(children: [
                             ListTile(
-                              title: Text(e["mahsulot_nomi"].toString().toUpperCase(),style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                              subtitle: Text(e["count"],style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              title: Text(
+                                e["mahsulot_nomi"].toString().toUpperCase(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
+                              subtitle: Text(
+                                e["count"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
                               trailing: IconButton(
                                   onPressed: () async {
                                     var response = await FirebaseCrudBuyurtmalar
@@ -244,8 +315,16 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           return Card(
                               child: Column(children: [
                             ListTile(
-                              title: Text(e["mahsulot_nomi"].toString().toUpperCase(),style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                              subtitle: Text(e["count"],style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              title: Text(
+                                e["mahsulot_nomi"].toString().toUpperCase(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
+                              subtitle: Text(
+                                e["count"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
                               trailing: IconButton(
                                   onPressed: () async {
                                     var response = await FirebaseCrudBuyurtmalar
@@ -301,8 +380,16 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                           return Card(
                               child: Column(children: [
                             ListTile(
-                              title: Text(e["mahsulot_nomi"].toString().toUpperCase(),style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                              subtitle: Text(e["count"],style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              title: Text(
+                                e["mahsulot_nomi"].toString().toUpperCase(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
+                              subtitle: Text(
+                                e["count"],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                              ),
                               trailing: IconButton(
                                   onPressed: () async {
                                     var response = await FirebaseCrudBuyurtmalar
