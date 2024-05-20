@@ -22,10 +22,28 @@ class _OrderPageState extends State<OrderPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readEmployee();
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
+  final searchController = TextEditingController();
   String tmahsulot = "Tanlanmagan";
+  String searchQuery = ""; // Variable to hold the search query
+
   @override
   void initState() {
     super.initState();
+    searchController
+        .addListener(_updateSearchQuery); // Add listener to search controller
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_updateSearchQuery);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _updateSearchQuery() {
+    setState(() {
+      searchQuery = searchController.text; // Update search query on text input
+    });
   }
 
   @override
@@ -60,12 +78,16 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Maxsulot nomini kiriting ...", suffix: Icon(Icons.search)),
+                  TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Maxsulot nomini kiriting ...",
+                        suffix: Icon(Icons.search)),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   TextFormField(
                     controller: mahsulotsoni,
                     autofocus: false,
@@ -130,12 +152,19 @@ class _OrderPageState extends State<OrderPage> {
                       int selectedIndex =
                           -1; // Initialize selectedIndex to -1 to represent no selection
                       if (snapshot.hasData) {
+                        var filteredDocs = snapshot.data!.docs.where((doc) {
+                          var data = doc.data() as Map<String, dynamic>;
+                          var mahsulotNomi = data["mahsulot_nomi"] as String;
+                          return mahsulotNomi
+                              .toLowerCase()
+                              .contains(searchQuery.toLowerCase());
+                        }).toList();
                         return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.docs.length,
+                          itemCount: filteredDocs.length,
                           itemBuilder: (BuildContext context, int index) {
-                            var e = snapshot.data!.docs[index].data()
+                            var e = filteredDocs[index].data()
                                 as Map<String, dynamic>;
                             return GestureDetector(
                               onTap: () {
@@ -148,32 +177,12 @@ class _OrderPageState extends State<OrderPage> {
                               child: Card(
                                 color: selectedIndex == index
                                     ? Colors.red
-                                    :null, // Set background color based on selectedIndex
+                                    : null, // Set background color based on selectedIndex
                                 child: ListTile(
                                   textColor: selectedIndex == index
                                       ? Colors.red
                                       : null,
                                   title: Text(e["mahsulot_nomi"]),
-                                  // trailing: IconButton(
-                                  //   onPressed: () async {
-                                  //     var response =
-                                  //         await FirebaseCrud.deleteEmployee(
-                                  //             docId: snapshot
-                                  //                 .data!.docs[index].id);
-                                  //     if (response.code != 200) {
-                                  //       showDialog(
-                                  //         context: context,
-                                  //         builder: (context) {
-                                  //           return AlertDialog(
-                                  //             content: Text(
-                                  //                 response.message.toString()),
-                                  //           );
-                                  //         },
-                                  //       );
-                                  //     }
-                                  //   },
-                                  //   icon: const Icon(Icons.delete_rounded),
-                                  // ),
                                 ),
                               ),
                             );
