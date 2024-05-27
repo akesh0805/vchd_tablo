@@ -38,32 +38,32 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     _startScrolling5();
   }
 
-
   void _startScrolling() {
     Future.delayed(const Duration(seconds: 1), () {
       _scroll1();
     });
   }
-  
+
   void _startScrolling2() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 3), () {
       _scroll2();
     });
   }
+
   void _startScrolling3() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 5), () {
       _scroll3();
     });
   }
-  
+
   void _startScrolling4() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 7), () {
       _scroll4();
     });
   }
-  
+
   void _startScrolling5() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 9), () {
       _scroll5();
     });
   }
@@ -74,7 +74,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward1
           ? scrollController1.position.maxScrollExtent
           : scrollController1.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
+      duration: const Duration(seconds: 90),
       curve: Curves.linear,
     )
         .then((_) {
@@ -89,7 +89,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward2
           ? scrollController2.position.maxScrollExtent
           : scrollController2.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
+      duration: const Duration(seconds: 60),
       curve: Curves.linear,
     )
         .then((_) {
@@ -104,7 +104,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward3
           ? scrollController3.position.maxScrollExtent
           : scrollController3.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
+      duration: const Duration(seconds: 70),
       curve: Curves.linear,
     )
         .then((_) {
@@ -119,7 +119,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward4
           ? scrollController4.position.maxScrollExtent
           : scrollController4.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
+      duration: const Duration(seconds: 80),
       curve: Curves.linear,
     )
         .then((_) {
@@ -134,7 +134,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward5
           ? scrollController5.position.maxScrollExtent
           : scrollController5.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
+      duration: const Duration(seconds: 65),
       curve: Curves.linear,
     )
         .then((_) {
@@ -177,12 +177,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             color: Colors.white,
           ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 35),
-        //     child: Text(formattedDate, style: TextStyle(color: Colors.white, fontSize: 30),),
-        //   )
-        // ],
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -192,7 +186,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
               children: [
                 const Text(
                   "ВСЦ",
-                  style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   color: Colors.teal,
@@ -274,7 +268,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
               children: [
                 const Text(
                   "КРЦ",
-                  style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   color: Colors.teal,
@@ -356,7 +350,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
               children: [
                 const Text(
                   "ТЦ",
-                  style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   color: Colors.teal,
@@ -438,7 +432,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
               children: [
                 const Text(
                   "КПА",
-                  style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   color: Colors.teal,
@@ -520,7 +514,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
               children: [
                 const Text(
                   "АКП",
-                  style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   color: Colors.teal,
