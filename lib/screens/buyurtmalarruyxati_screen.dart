@@ -18,56 +18,56 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
   final ScrollController scrollController1 = ScrollController();
-  final ScrollController scrollController2 = ScrollController();
-  final ScrollController scrollController3 = ScrollController();
-  final ScrollController scrollController4 = ScrollController();
-  final ScrollController scrollController5 = ScrollController();
+  // final ScrollController scrollController2 = ScrollController();
+  // final ScrollController scrollController3 = ScrollController();
+  // final ScrollController scrollController4 = ScrollController();
+  // final ScrollController scrollController5 = ScrollController();
   bool scrollingForward1 = true;
-  bool scrollingForward2 = true;
-  bool scrollingForward3 = true;
-  bool scrollingForward4 = true;
-  bool scrollingForward5 = true;
+  // bool scrollingForward2 = true;
+  // bool scrollingForward3 = true;
+  // bool scrollingForward4 = true;
+  // bool scrollingForward5 = true;
 
   @override
   void initState() {
     super.initState();
 
     _startScrolling();
-    _startScrolling2();
-    _startScrolling3();
-    _startScrolling4();
-    _startScrolling5();
+    // _startScrolling2();
+    // _startScrolling3();
+    // _startScrolling4();
+    // _startScrolling5();
   }
 
   void _startScrolling() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 10), () {
       _scroll1();
     });
   }
 
-  void _startScrolling2() {
-    Future.delayed(const Duration(seconds: 1), () {
-      _scroll2();
-    });
-  }
+  // void _startScrolling2() {
+  //   Future.delayed(const Duration(seconds: 1), () {
+  //     _scroll2();
+  //   });
+  // }
 
-  void _startScrolling3() {
-    Future.delayed(const Duration(seconds: 1), () {
-      _scroll3();
-    });
-  }
+  // void _startScrolling3() {
+  //   Future.delayed(const Duration(seconds: 1), () {
+  //     _scroll3();
+  //   });
+  // }
 
-  void _startScrolling4() {
-    Future.delayed(const Duration(seconds: 1), () {
-      _scroll4();
-    });
-  }
+  // void _startScrolling4() {
+  //   Future.delayed(const Duration(seconds: 1), () {
+  //     _scroll4();
+  //   });
+  // }
 
-  void _startScrolling5() {
-    Future.delayed(const Duration(seconds: 1), () {
-      _scroll5();
-    });
-  }
+  // void _startScrolling5() {
+  //   Future.delayed(const Duration(seconds: 1), () {
+  //     _scroll5();
+  //   });
+  // }
 
   void _scroll1() {
     scrollController1
@@ -84,73 +84,73 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     });
   }
 
-  void _scroll2() {
-    scrollController2
-        .animateTo(
-      scrollingForward2
-          ? scrollController2.position.maxScrollExtent
-          : scrollController2.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
-      curve: Curves.linear,
-    )
-        .then((_) {
-      scrollingForward2 = !scrollingForward2;
-      _scroll2(); // Call _scroll2 again to continue the loop
-    });
-  }
+  // void _scroll2() {
+  //   scrollController2
+  //       .animateTo(
+  //     scrollingForward2
+  //         ? scrollController2.position.maxScrollExtent
+  //         : scrollController2.position.minScrollExtent,
+  //     duration: const Duration(seconds: 50),
+  //     curve: Curves.linear,
+  //   )
+  //       .then((_) {
+  //     scrollingForward2 = !scrollingForward2;
+  //     _scroll2(); // Call _scroll2 again to continue the loop
+  //   });
+  // }
 
-  void _scroll3() {
-    scrollController3
-        .animateTo(
-      scrollingForward3
-          ? scrollController3.position.maxScrollExtent
-          : scrollController3.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
-      curve: Curves.linear,
-    )
-        .then((_) {
-      scrollingForward3 = !scrollingForward3;
-      _scroll3(); // Call _scroll3 again to continue the loop
-    });
-  }
+  // void _scroll3() {
+  //   scrollController3
+  //       .animateTo(
+  //     scrollingForward3
+  //         ? scrollController3.position.maxScrollExtent
+  //         : scrollController3.position.minScrollExtent,
+  //     duration: const Duration(seconds: 50),
+  //     curve: Curves.linear,
+  //   )
+  //       .then((_) {
+  //     scrollingForward3 = !scrollingForward3;
+  //     _scroll3(); // Call _scroll3 again to continue the loop
+  //   });
+  // }
 
-  void _scroll4() {
-    scrollController4
-        .animateTo(
-      scrollingForward4
-          ? scrollController4.position.maxScrollExtent
-          : scrollController4.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
-      curve: Curves.linear,
-    )
-        .then((_) {
-      scrollingForward4 = !scrollingForward4;
-      _scroll4(); // Call _scroll4 again to continue the loop
-    });
-  }
+  // void _scroll4() {
+  //   scrollController4
+  //       .animateTo(
+  //     scrollingForward4
+  //         ? scrollController4.position.maxScrollExtent
+  //         : scrollController4.position.minScrollExtent,
+  //     duration: const Duration(seconds: 50),
+  //     curve: Curves.linear,
+  //   )
+  //       .then((_) {
+  //     scrollingForward4 = !scrollingForward4;
+  //     _scroll4(); // Call _scroll4 again to continue the loop
+  //   });
+  // }
 
-  void _scroll5() {
-    scrollController5
-        .animateTo(
-      scrollingForward5
-          ? scrollController5.position.maxScrollExtent
-          : scrollController5.position.minScrollExtent,
-      duration: const Duration(seconds: 50),
-      curve: Curves.linear,
-    )
-        .then((_) {
-      scrollingForward5 = !scrollingForward5;
-      _scroll5(); // Call _scroll5 again to continue the loop
-    });
-  }
+  // void _scroll5() {
+  //   scrollController5
+  //       .animateTo(
+  //     scrollingForward5
+  //         ? scrollController5.position.maxScrollExtent
+  //         : scrollController5.position.minScrollExtent,
+  //     duration: const Duration(seconds: 50),
+  //     curve: Curves.linear,
+  //   )
+  //       .then((_) {
+  //     scrollingForward5 = !scrollingForward5;
+  //     _scroll5(); // Call _scroll5 again to continue the loop
+  //   });
+  // }
 
   @override
   void dispose() {
     scrollController1.dispose();
-    scrollController2.dispose();
-    scrollController3.dispose();
-    scrollController4.dispose();
-    scrollController5.dispose();
+    // scrollController2.dispose();
+    // scrollController3.dispose();
+    // scrollController4.dispose();
+    // scrollController5.dispose();
 
     super.dispose();
   }
@@ -270,7 +270,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 Expanded(
                   child: ListView(
                     shrinkWrap: true,
-                    controller: scrollController2,
+                    // controller: scrollController2,
                     children: [
                       StreamBuilder(
                         stream: collectionReference2,
@@ -288,9 +288,9 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                     child: Column(children: [
                                   ListTile(
                                     title: Text(
-                                      e["mahsulot_nomi"]
-                                          .toString()
-                                          .toUpperCase(),
+                                      e["mahsulot_nomi"],
+                                          // .toString()
+                                          // .toUpperCase(),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
@@ -347,7 +347,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    controller: scrollController3,
+                    // controller: scrollController3,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -366,9 +366,9 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                     child: Column(children: [
                                   ListTile(
                                     title: Text(
-                                      e["mahsulot_nomi"]
-                                          .toString()
-                                          .toUpperCase(),
+                                      e["mahsulot_nomi"],
+                                          // .toString()
+                                          // .toUpperCase(),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
@@ -425,7 +425,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    controller: scrollController4,
+                    // controller: scrollController4,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -444,9 +444,9 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                     child: Column(children: [
                                   ListTile(
                                     title: Text(
-                                      e["mahsulot_nomi"]
-                                          .toString()
-                                          .toUpperCase(),
+                                      e["mahsulot_nomi"],
+                                          // .toString()
+                                          // .toUpperCase(),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
@@ -503,7 +503,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    controller: scrollController5,
+                    // controller: scrollController5,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -522,9 +522,9 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                     child: Column(children: [
                                   ListTile(
                                     title: Text(
-                                      e["mahsulot_nomi"]
-                                          .toString()
-                                          .toUpperCase(),
+                                      e["mahsulot_nomi"],
+                                          // .toString()
+                                          // .toUpperCase(),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
