@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vchd_tablo/screens/buyurtmalarruyxati_screen.dart';
 import 'package:vchd_tablo/screens/home_screen.dart';
 import 'package:vchd_tablo/screens/login_page.dart';
-import 'package:vchd_tablo/screens/maxsulorqoshish_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomePage extends StatefulWidget {

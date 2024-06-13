@@ -15,7 +15,7 @@ class FirebaseCrud {
 
     var result = await documentReferencer.set(data).whenComplete(() {
       response.code = 200;
-      response.message = "Sucessfully added to the database";
+      response.message = "Maxsulot qo'shildi";
     }).catchError((e) {
       response.code = 500;
       response.message = e;

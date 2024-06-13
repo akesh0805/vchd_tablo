@@ -18,25 +18,13 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
       FirebaseCrudBuyurtmalar.readEmployee();
   final ScrollController scrollController1 = ScrollController();
-  // final ScrollController scrollController2 = ScrollController();
-  // final ScrollController scrollController3 = ScrollController();
-  // final ScrollController scrollController4 = ScrollController();
-  // final ScrollController scrollController5 = ScrollController();
   bool scrollingForward1 = true;
-  // bool scrollingForward2 = true;
-  // bool scrollingForward3 = true;
-  // bool scrollingForward4 = true;
-  // bool scrollingForward5 = true;
 
   @override
   void initState() {
     super.initState();
 
     _startScrolling();
-    // _startScrolling2();
-    // _startScrolling3();
-    // _startScrolling4();
-    // _startScrolling5();
   }
 
   void _startScrolling() {
@@ -44,30 +32,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       _scroll1();
     });
   }
-
-  // void _startScrolling2() {
-  //   Future.delayed(const Duration(seconds: 1), () {
-  //     _scroll2();
-  //   });
-  // }
-
-  // void _startScrolling3() {
-  //   Future.delayed(const Duration(seconds: 1), () {
-  //     _scroll3();
-  //   });
-  // }
-
-  // void _startScrolling4() {
-  //   Future.delayed(const Duration(seconds: 1), () {
-  //     _scroll4();
-  //   });
-  // }
-
-  // void _startScrolling5() {
-  //   Future.delayed(const Duration(seconds: 1), () {
-  //     _scroll5();
-  //   });
-  // }
 
   void _scroll1() {
     scrollController1
@@ -84,77 +48,14 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     });
   }
 
-  // void _scroll2() {
-  //   scrollController2
-  //       .animateTo(
-  //     scrollingForward2
-  //         ? scrollController2.position.maxScrollExtent
-  //         : scrollController2.position.minScrollExtent,
-  //     duration: const Duration(seconds: 50),
-  //     curve: Curves.linear,
-  //   )
-  //       .then((_) {
-  //     scrollingForward2 = !scrollingForward2;
-  //     _scroll2(); // Call _scroll2 again to continue the loop
-  //   });
-  // }
-
-  // void _scroll3() {
-  //   scrollController3
-  //       .animateTo(
-  //     scrollingForward3
-  //         ? scrollController3.position.maxScrollExtent
-  //         : scrollController3.position.minScrollExtent,
-  //     duration: const Duration(seconds: 50),
-  //     curve: Curves.linear,
-  //   )
-  //       .then((_) {
-  //     scrollingForward3 = !scrollingForward3;
-  //     _scroll3(); // Call _scroll3 again to continue the loop
-  //   });
-  // }
-
-  // void _scroll4() {
-  //   scrollController4
-  //       .animateTo(
-  //     scrollingForward4
-  //         ? scrollController4.position.maxScrollExtent
-  //         : scrollController4.position.minScrollExtent,
-  //     duration: const Duration(seconds: 50),
-  //     curve: Curves.linear,
-  //   )
-  //       .then((_) {
-  //     scrollingForward4 = !scrollingForward4;
-  //     _scroll4(); // Call _scroll4 again to continue the loop
-  //   });
-  // }
-
-  // void _scroll5() {
-  //   scrollController5
-  //       .animateTo(
-  //     scrollingForward5
-  //         ? scrollController5.position.maxScrollExtent
-  //         : scrollController5.position.minScrollExtent,
-  //     duration: const Duration(seconds: 50),
-  //     curve: Curves.linear,
-  //   )
-  //       .then((_) {
-  //     scrollingForward5 = !scrollingForward5;
-  //     _scroll5(); // Call _scroll5 again to continue the loop
-  //   });
-  // }
-
   @override
   void dispose() {
     scrollController1.dispose();
-    // scrollController2.dispose();
-    // scrollController3.dispose();
-    // scrollController4.dispose();
-    // scrollController5.dispose();
 
     super.dispose();
   }
 
+  bool click = true;
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -203,54 +104,56 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                 .where((doc) => doc["id"] == s1)
                                 .toList();
                             return ListView(
-                              physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              children: filteredDocs.map((e) {
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: filteredDocs.map((doc) {
+                                var data = doc.data() as Map<String, dynamic>;
+                                bool isDone = data["isDone"] ?? false;
+
                                 return Card(
-                                    child: Column(children: [
-                                  ListTile(
-                                    title: Text(
-                                      e["mahsulot_nomi"]
-                                          .toString()
-                                          .toUpperCase(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    subtitle: Text(
-                                      e["count"],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () async {
-                                          var response =
-                                              await FirebaseCrudBuyurtmalar
-                                                  .deleteEmployee(docId: e.id);
-                                          if (response.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(response.message
-                                                      .toString()),
-                                                );
-                                              },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: IconButton(
+                                          onPressed: () async {
+                                            var newStatus = !isDone;
+                                            var response =
+                                                await FirebaseCrudBuyurtmalar
+                                                    .updateEmployee(
+                                              docId: doc.id,
+                                              data: {"isDone": newStatus},
                                             );
-                                          }
-                                        },
-                                        icon: const Icon(Icons.delete_rounded)),
+                                            if (response.code != 200) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(response
+                                                        .message
+                                                        .toString()),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            isDone
+                                                ? Icons.done_outline
+                                                : Icons.done,
+                                            color: isDone ? Colors.green : null,
+                                          ),
+                                        ),
+                                        title: Text(data["mahsulot_nomi"]),
+                                        subtitle: Text(data["count"]),
+                                      ),
+                                    ],
                                   ),
-                                ]));
+                                );
                               }).toList(),
                             );
                           }
-
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           );
                         },
                       ),
@@ -270,7 +173,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 Expanded(
                   child: ListView(
                     shrinkWrap: true,
-                    // controller: scrollController2,
                     children: [
                       StreamBuilder(
                         stream: collectionReference2,
@@ -283,52 +185,54 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                             return ListView(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              children: filteredDocs.map((e) {
+                              children: filteredDocs.map((doc) {
+                                var data = doc.data() as Map<String, dynamic>;
+                                bool isDone = data["isDone"] ?? false;
+
                                 return Card(
-                                    child: Column(children: [
-                                  ListTile(
-                                    title: Text(
-                                      e["mahsulot_nomi"],
-                                          // .toString()
-                                          // .toUpperCase(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    subtitle: Text(
-                                      e["count"],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () async {
-                                          var response =
-                                              await FirebaseCrudBuyurtmalar
-                                                  .deleteEmployee(docId: e.id);
-                                          if (response.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(response.message
-                                                      .toString()),
-                                                );
-                                              },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: IconButton(
+                                          onPressed: () async {
+                                            var newStatus = !isDone;
+                                            var response =
+                                                await FirebaseCrudBuyurtmalar
+                                                    .updateEmployee(
+                                              docId: doc.id,
+                                              data: {"isDone": newStatus},
                                             );
-                                          }
-                                        },
-                                        icon: const Icon(Icons.delete_rounded)),
+                                            if (response.code != 200) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(response
+                                                        .message
+                                                        .toString()),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            isDone
+                                                ? Icons.done_outline
+                                                : Icons.done,
+                                            color: isDone ? Colors.green : null,
+                                          ),
+                                        ),
+                                        title: Text(data["mahsulot_nomi"]),
+                                        subtitle: Text(data["count"]),
+                                      ),
+                                    ],
                                   ),
-                                ]));
+                                );
                               }).toList(),
                             );
                           }
-
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           );
                         },
                       ),
@@ -347,7 +251,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    // controller: scrollController3,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -359,54 +262,56 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                 .where((doc) => doc["id"] == s3)
                                 .toList();
                             return ListView(
-                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              children: filteredDocs.map((e) {
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: filteredDocs.map((doc) {
+                                var data = doc.data() as Map<String, dynamic>;
+                                bool isDone = data["isDone"] ?? false;
+
                                 return Card(
-                                    child: Column(children: [
-                                  ListTile(
-                                    title: Text(
-                                      e["mahsulot_nomi"],
-                                          // .toString()
-                                          // .toUpperCase(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    subtitle: Text(
-                                      e["count"],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () async {
-                                          var response =
-                                              await FirebaseCrudBuyurtmalar
-                                                  .deleteEmployee(docId: e.id);
-                                          if (response.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(response.message
-                                                      .toString()),
-                                                );
-                                              },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: IconButton(
+                                          onPressed: () async {
+                                            var newStatus = !isDone;
+                                            var response =
+                                                await FirebaseCrudBuyurtmalar
+                                                    .updateEmployee(
+                                              docId: doc.id,
+                                              data: {"isDone": newStatus},
                                             );
-                                          }
-                                        },
-                                        icon: const Icon(Icons.delete_rounded)),
+                                            if (response.code != 200) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(response
+                                                        .message
+                                                        .toString()),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            isDone
+                                                ? Icons.done_outline
+                                                : Icons.done,
+                                            color: isDone ? Colors.green : null,
+                                          ),
+                                        ),
+                                        title: Text(data["mahsulot_nomi"]),
+                                        subtitle: Text(data["count"]),
+                                      ),
+                                    ],
                                   ),
-                                ]));
+                                );
                               }).toList(),
                             );
                           }
-
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           );
                         },
                       ),
@@ -425,7 +330,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    // controller: scrollController4,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -437,54 +341,56 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                 .where((doc) => doc["id"] == s4)
                                 .toList();
                             return ListView(
-                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              children: filteredDocs.map((e) {
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: filteredDocs.map((doc) {
+                                var data = doc.data() as Map<String, dynamic>;
+                                bool isDone = data["isDone"] ?? false;
+
                                 return Card(
-                                    child: Column(children: [
-                                  ListTile(
-                                    title: Text(
-                                      e["mahsulot_nomi"],
-                                          // .toString()
-                                          // .toUpperCase(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    subtitle: Text(
-                                      e["count"],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () async {
-                                          var response =
-                                              await FirebaseCrudBuyurtmalar
-                                                  .deleteEmployee(docId: e.id);
-                                          if (response.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(response.message
-                                                      .toString()),
-                                                );
-                                              },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: IconButton(
+                                          onPressed: () async {
+                                            var newStatus = !isDone;
+                                            var response =
+                                                await FirebaseCrudBuyurtmalar
+                                                    .updateEmployee(
+                                              docId: doc.id,
+                                              data: {"isDone": newStatus},
                                             );
-                                          }
-                                        },
-                                        icon: const Icon(Icons.delete_rounded)),
+                                            if (response.code != 200) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(response
+                                                        .message
+                                                        .toString()),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            isDone
+                                                ? Icons.done_outline
+                                                : Icons.done,
+                                            color: isDone ? Colors.green : null,
+                                          ),
+                                        ),
+                                        title: Text(data["mahsulot_nomi"]),
+                                        subtitle: Text(data["count"]),
+                                      ),
+                                    ],
                                   ),
-                                ]));
+                                );
                               }).toList(),
                             );
                           }
-
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           );
                         },
                       ),
@@ -503,7 +409,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    // controller: scrollController5,
                     shrinkWrap: true,
                     children: [
                       StreamBuilder(
@@ -515,54 +420,56 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                 .where((doc) => doc["id"] == s5)
                                 .toList();
                             return ListView(
-                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              children: filteredDocs.map((e) {
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: filteredDocs.map((doc) {
+                                var data = doc.data() as Map<String, dynamic>;
+                                bool isDone = data["isDone"] ?? false;
+
                                 return Card(
-                                    child: Column(children: [
-                                  ListTile(
-                                    title: Text(
-                                      e["mahsulot_nomi"],
-                                          // .toString()
-                                          // .toUpperCase(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    subtitle: Text(
-                                      e["count"],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () async {
-                                          var response =
-                                              await FirebaseCrudBuyurtmalar
-                                                  .deleteEmployee(docId: e.id);
-                                          if (response.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(response.message
-                                                      .toString()),
-                                                );
-                                              },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: IconButton(
+                                          onPressed: () async {
+                                            var newStatus = !isDone;
+                                            var response =
+                                                await FirebaseCrudBuyurtmalar
+                                                    .updateEmployee(
+                                              docId: doc.id,
+                                              data: {"isDone": newStatus},
                                             );
-                                          }
-                                        },
-                                        icon: const Icon(Icons.delete_rounded)),
+                                            if (response.code != 200) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(response
+                                                        .message
+                                                        .toString()),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            isDone
+                                                ? Icons.done_outline
+                                                : Icons.done,
+                                            color: isDone ? Colors.green : null,
+                                          ),
+                                        ),
+                                        title: Text(data["mahsulot_nomi"]),
+                                        subtitle: Text(data["count"]),
+                                      ),
+                                    ],
                                   ),
-                                ]));
+                                );
                               }).toList(),
                             );
                           }
-
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           );
                         },
                       ),
