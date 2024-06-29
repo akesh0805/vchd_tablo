@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'dart:html' as html;
 
 import '../services/firebase_buyurtmalar.dart';
 
@@ -19,12 +21,89 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       FirebaseCrudBuyurtmalar.readEmployee();
   final ScrollController scrollController1 = ScrollController();
   bool scrollingForward1 = true;
+  String date = '';
 
   @override
   void initState() {
     super.initState();
-
+    date = formatDateTime();
     _startScrolling();
+  }
+
+  String formatDateTime() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('dd-MM-yyyy-HH:mm:ss');
+    return formatter.format(now);
+  }
+
+  Future<void> _cleanCollection() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Buyurtmalar').get();
+
+      // Delete all documents in the collection
+      querySnapshot.docs.forEach((doc) async {
+        await doc.reference.delete();
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Buyurtmalar ro\'yxati tozalandi')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Xatolik kelib chiqdi: $e')),
+      );
+    }
+  }
+
+  Future<void> _downloadExcelFile() async {
+    // Fetch data from Firestore
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Buyurtmalar').get();
+
+    // Create an Excel document
+    var excel = Excel.createExcel();
+    Sheet sheetObject = excel['Sheet1'];
+
+    // Add column headers
+    sheetObject.appendRow(['Sex nomi', 'Mahsulot nomi', 'Midori', 'Holati']);
+
+    // Add data rows
+    for (var doc in querySnapshot.docs) {
+      sheetObject.appendRow([
+        doc['id']
+            .toString()
+            .replaceAll('s1', 'ВСЦ')
+            .replaceAll('s2', 'КРЦ')
+            .replaceAll('s3', 'ТЦ')
+            .replaceAll('s4', 'КПА')
+            .replaceAll('s5', 'АКП'),
+        doc['mahsulot_nomi'],
+        doc['count'],
+        doc['isDone']
+            .toString()
+            .replaceAll('true', 'Tayyorlandi')
+            .replaceAll('false', 'Tayyorlanmadi')
+      ]);
+    }
+
+    // Encode the Excel document as bytes
+    var excelBytes = excel.encode();
+
+    if (excelBytes != null) {
+      // Create a Blob from the Excel bytes
+      final blob = html.Blob([excelBytes],
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+      // Create a link element
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      final anchor = html.AnchorElement(href: url)
+        ..setAttribute('download', '$date.xlsx')
+        ..click();
+
+      // Clean up
+      html.Url.revokeObjectUrl(url);
+    }
   }
 
   void _startScrolling() {
@@ -59,7 +138,6 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
-
     String formattedDate = DateFormat('dd.MM.yyyy').format(now);
     String text = "KUNGI BUYURTMALAR RO'YXATI";
     String appbar = '$formattedDate $text';
@@ -79,6 +157,18 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: _cleanCollection,
+            icon: const Icon(Icons.delete),
+          ),
+          IconButton(
+            onPressed: () {
+              _downloadExcelFile();
+            },
+            icon: const Icon(Icons.file_download),
+          )
+        ],
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
