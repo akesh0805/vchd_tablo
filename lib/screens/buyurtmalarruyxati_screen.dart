@@ -107,7 +107,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
   }
 
   void _startScrolling() {
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(minutes: 30), () {
       _scroll1();
     });
   }
@@ -125,6 +125,33 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
       scrollingForward1 = !scrollingForward1;
       _scroll1(); // Call _scroll1 again to continue the loop
     });
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Buyurtmalar ro'yxatini o'chirish"),
+          content: Text("Buyurtmalar ro'yxatini tozalashni tasdiqlaysizmi?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Bekor qilish'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Закрыть диалог
+              },
+            ),
+            TextButton(
+              child: Text("O'chirish"),
+              onPressed: () {
+                _cleanCollection(); // Вызвать функцию удаления
+                Navigator.of(context).pop(); // Закрыть диалог
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -159,7 +186,8 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: _cleanCollection,
+            onPressed: () => _showDeleteConfirmationDialog(
+                context), // Показываем диалог подтверждения
             icon: const Icon(Icons.delete),
           ),
           IconButton(
