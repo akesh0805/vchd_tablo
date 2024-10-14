@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'dart:html' as html;
+import 'dart:html' as html ;
 
 import '../services/firebase_buyurtmalar.dart';
 
@@ -18,7 +19,7 @@ class ZakazlarScreen extends StatefulWidget {
 
 class _ZakazlarScreenState extends State<ZakazlarScreen> {
   final Stream<QuerySnapshot> collectionReference2 =
-      FirebaseCrudBuyurtmalar.readEmployee();
+      FirebaseCrudBuyurtmalar.readOrders();
   final ScrollController scrollController1 = ScrollController();
   bool scrollingForward1 = true;
   String date = '';
@@ -88,22 +89,22 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
     }
 
     // Encode the Excel document as bytes
+   // Код для веба
+  if (kIsWeb) {
     var excelBytes = excel.encode();
-
     if (excelBytes != null) {
-      // Create a Blob from the Excel bytes
       final blob = html.Blob([excelBytes],
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-      // Create a link element
       final url = html.Url.createObjectUrlFromBlob(blob);
       final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', '$date.xlsx')
+        ..setAttribute('download', 'orders.xlsx')
         ..click();
-
-      // Clean up
       html.Url.revokeObjectUrl(url);
     }
+  } else {
+    // Код для мобильной версии
+    print("Загрузка Excel недоступна на мобильных устройствах.");
+  }
   }
 
   void _startScrolling() {
@@ -162,17 +163,18 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
   }
 
   bool click = true;
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd.MM.yyyy').format(now);
     String text = "KUNGI BUYURTMALAR RO'YXATI";
     String appbar = '$formattedDate $text';
-    String s1 = "s1";
-    String s2 = "s2";
-    String s3 = "s3";
-    String s4 = "s4";
-    String s5 = "s5";
+    String s1 = "ВСЦ";
+    String s2 = "КРЦ";
+    String s3 = "ТЦ";
+    String s4 = "КПА";
+    String s5 = "АКП";
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -190,6 +192,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                 context), // Показываем диалог подтверждения
             icon: const Icon(Icons.delete),
           ),
+        
           IconButton(
             onPressed: () {
               _downloadExcelFile();
@@ -237,7 +240,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                             var newStatus = !isDone;
                                             var response =
                                                 await FirebaseCrudBuyurtmalar
-                                                    .updateEmployee(
+                                                    .updateOrder(
                                               docId: doc.id,
                                               data: {"isDone": newStatus},
                                             );
@@ -316,7 +319,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                             var newStatus = !isDone;
                                             var response =
                                                 await FirebaseCrudBuyurtmalar
-                                                    .updateEmployee(
+                                                    .updateOrder(
                                               docId: doc.id,
                                               data: {"isDone": newStatus},
                                             );
@@ -395,7 +398,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                             var newStatus = !isDone;
                                             var response =
                                                 await FirebaseCrudBuyurtmalar
-                                                    .updateEmployee(
+                                                    .updateOrder(
                                               docId: doc.id,
                                               data: {"isDone": newStatus},
                                             );
@@ -474,7 +477,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                             var newStatus = !isDone;
                                             var response =
                                                 await FirebaseCrudBuyurtmalar
-                                                    .updateEmployee(
+                                                    .updateOrder(
                                               docId: doc.id,
                                               data: {"isDone": newStatus},
                                             );
@@ -553,7 +556,7 @@ class _ZakazlarScreenState extends State<ZakazlarScreen> {
                                             var newStatus = !isDone;
                                             var response =
                                                 await FirebaseCrudBuyurtmalar
-                                                    .updateEmployee(
+                                                    .updateOrder(
                                               docId: doc.id,
                                               data: {"isDone": newStatus},
                                             );

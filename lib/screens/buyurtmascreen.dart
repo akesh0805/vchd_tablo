@@ -17,15 +17,19 @@ class _OrderPageState extends State<OrderPage> {
   final mahsulotsoni = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readEmployee();
-  final Stream<QuerySnapshot> collectionReference2 = FirebaseCrudBuyurtmalar.readEmployee();
+  final Stream<QuerySnapshot> collectionReference2 =
+      FirebaseCrudBuyurtmalar.readOrders();
   final searchController = TextEditingController();
   String tmahsulot = "Tanlanmagan";
   String searchQuery = ""; // Переменная для хранения поискового запроса
+  String currentDateTime = "";
 
   @override
   void initState() {
     super.initState();
-    searchController.addListener(_updateSearchQuery); // Добавляем слушатель к контроллеру поиска
+    searchController.addListener(
+        _updateSearchQuery); // Добавляем слушатель к контроллеру поиска
+        _updateCurrentDateTime();
   }
 
   @override
@@ -37,8 +41,15 @@ class _OrderPageState extends State<OrderPage> {
 
   void _updateSearchQuery() {
     setState(() {
-      searchQuery = searchController.text; // Обновляем поисковый запрос при вводе текста
+      searchQuery =
+          searchController.text; // Обновляем поисковый запрос при вводе текста
     });
+  }
+
+  void _updateCurrentDateTime() {
+    DateTime now = DateTime.now();
+    currentDateTime =
+        "${now.day}-${now.month}-${now.year} ${now.hour}:${now.minute}"; // Форматируем дату и время
   }
 
   bool click = true;
@@ -64,6 +75,10 @@ class _OrderPageState extends State<OrderPage> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    Text(
+                      "Joriy sana va vaqt: $currentDateTime",
+                      style: const TextStyle(fontSize: 18, color: Colors.black),
+                    ),
                     const Text(
                       "Maxsulot qo'shish",
                       style: TextStyle(fontSize: 25),
@@ -98,10 +113,18 @@ class _OrderPageState extends State<OrderPage> {
                     FloatingActionButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          var response = await FirebaseCrudBuyurtmalar.addEmployee(
+                          // Получаем текущую дату
+
+                          DateTime now = DateTime.now();
+                          String formattedDate =
+                              "${now.day}-${now.month}-${now.year} ${now.hour}:${now.minute}";
+
+                          var response = await FirebaseCrudBuyurtmalar.addOrder(
                             name: tmahsulot,
                             count: mahsulotsoni.text,
                             id: widget.sehName,
+                            createdAt:
+                                formattedDate, // Передаем отформатированную дату
                           );
                           showDialog(
                             context: context,
@@ -123,31 +146,41 @@ class _OrderPageState extends State<OrderPage> {
                     const SizedBox(height: 10),
                     StreamBuilder(
                       stream: collectionReference,
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        int selectedIndex = -1; // Инициализируем selectedIndex значением -1
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        int selectedIndex =
+                            -1; // Инициализируем selectedIndex значением -1
                         if (snapshot.hasData) {
                           var filteredDocs = snapshot.data!.docs.where((doc) {
                             var data = doc.data() as Map<String, dynamic>;
                             var mahsulotNomi = data["mahsulot_nomi"] as String;
-                            return mahsulotNomi.toLowerCase().contains(searchQuery.toLowerCase());
+                            return mahsulotNomi
+                                .toLowerCase()
+                                .contains(searchQuery.toLowerCase());
                           }).toList();
                           return ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: filteredDocs.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var e = filteredDocs[index].data() as Map<String, dynamic>;
+                              var e = filteredDocs[index].data()
+                                  as Map<String, dynamic>;
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    selectedIndex = index; // Обновляем selectedIndex при нажатии
+                                    selectedIndex =
+                                        index; // Обновляем selectedIndex при нажатии
                                     tmahsulot = e["mahsulot_nomi"];
                                   });
                                 },
                                 child: Card(
-                                  color: selectedIndex == index ? Colors.red : null, // Устанавливаем цвет фона в зависимости от selectedIndex
+                                  color: selectedIndex == index
+                                      ? Colors.red
+                                      : null, // Устанавливаем цвет фона в зависимости от selectedIndex
                                   child: ListTile(
-                                    textColor: selectedIndex == index ? Colors.red : null,
+                                    textColor: selectedIndex == index
+                                        ? Colors.red
+                                        : null,
                                     title: Text(e["mahsulot_nomi"]),
                                   ),
                                 ),
@@ -174,9 +207,12 @@ class _OrderPageState extends State<OrderPage> {
                   const Divider(),
                   StreamBuilder(
                     stream: collectionReference2,
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
-                        var filteredDocs = snapshot.data!.docs.where((doc) => doc["id"] == widget.sehName).toList();
+                        var filteredDocs = snapshot.data!.docs
+                            .where((doc) => doc["id"] == widget.sehName)
+                            .toList();
                         return ListView(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -191,7 +227,9 @@ class _OrderPageState extends State<OrderPage> {
                                     leading: IconButton(
                                       onPressed: () async {
                                         var newStatus = !isDone;
-                                        var response = await FirebaseCrudBuyurtmalar.updateEmployee(
+                                        var response =
+                                            await FirebaseCrudBuyurtmalar
+                                                .updateOrder(
                                           docId: doc.id,
                                           data: {"isDone": newStatus},
                                         );
@@ -200,14 +238,17 @@ class _OrderPageState extends State<OrderPage> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                content: Text(response.message.toString()),
+                                                content: Text(response.message
+                                                    .toString()),
                                               );
                                             },
                                           );
                                         }
                                       },
                                       icon: Icon(
-                                        isDone ? Icons.done_outline : Icons.done,
+                                        isDone
+                                            ? Icons.done_outline
+                                            : Icons.done,
                                         color: isDone ? Colors.green : null,
                                       ),
                                     ),
@@ -215,13 +256,16 @@ class _OrderPageState extends State<OrderPage> {
                                     subtitle: Text(data["count"]),
                                     trailing: IconButton(
                                       onPressed: () async {
-                                        var response = await FirebaseCrudBuyurtmalar.deleteEmployee(docId: doc.id);
+                                        var response =
+                                            await FirebaseCrudBuyurtmalar
+                                                .deleteOrder(docId: doc.id);
                                         if (response.code != 200) {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                content: Text(response.message.toString()),
+                                                content: Text(response.message
+                                                    .toString()),
                                               );
                                             },
                                           );

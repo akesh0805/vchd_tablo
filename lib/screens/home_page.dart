@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vchd_tablo/screens/OrderNewScreen.dart';
 import 'package:vchd_tablo/screens/buyurtmalarruyxati_screen.dart';
+import 'package:vchd_tablo/screens/historyOrder.dart';
 import 'package:vchd_tablo/screens/home_screen.dart';
 import 'package:vchd_tablo/screens/login_page.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -50,126 +52,156 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: Colors.teal,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 500,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: NetworkImage(
-                                "https://sc04.alicdn.com/kf/H3f820b4afd344461988f8a78eb433185E/229626809/H3f820b4afd344461988f8a78eb433185E.png",
-                              ),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(15),
-                          border:
-                              Border.all(color: Colors.grey.shade700, width: 2),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: NetworkImage(
+                                  "https://sc04.alicdn.com/kf/H3f820b4afd344461988f8a78eb433185E/229626809/H3f820b4afd344461988f8a78eb433185E.png",
+                                ),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(15),
+                            border:
+                                Border.all(color: Colors.grey.shade700, width: 2),
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton.icon(
-                          icon: const Icon(Icons.list_alt),
-                          onPressed: () {
-                            Navigator.pushNamed(context, HomeScreen.id);
-                          },
-                          label: const Text("Buyurtma berish")),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        width: 500,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: NetworkImage(
-                                  "https://static.tildacdn.com/tild3963-3330-4462-a430-643431333965/photo.png"),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(15),
-                          border:
-                              Border.all(color: Colors.grey.shade700, width: 2),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton.icon(
-                          icon: const Icon(Icons.list),
-                          onPressed: () {
-                            Navigator.pushNamed(context, ZakazlarScreen.id);
-                          },
-                          label: const Text("Buyurtmalar ro'yxati")),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        width: 500,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: NetworkImage(
-                                  "https://259506.selcdn.ru/sites-static/site812817/321cc7a3-9130-4b20-9052-b45a3393a06e/321cc7a3-9130-4b20-9052-b45a3393a06e-6378475.jpeg"),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(15),
-                          border:
-                              Border.all(color: Colors.grey.shade700, width: 2),
+                        ElevatedButton.icon(
+                            icon: const Icon(Icons.list_alt),
+                            onPressed: () {
+                              Navigator.pushNamed(context, HomeScreen.id);
+                            },
+                            label: const Text("Buyurtma berish")),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: NetworkImage(
+                                    "https://static.tildacdn.com/tild3963-3330-4462-a430-643431333965/photo.png"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(15),
+                            border:
+                                Border.all(color: Colors.grey.shade700, width: 2),
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton.icon(
-                        
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            Navigator.pushNamed(context, LoginPage.id);
-                          },
-                          label: const Text("Maxsulot qo'shish")),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                child: DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                  child: AnimatedTextKit(
-                    repeatForever: true,
-                    pause: const Duration(seconds: 3),
-                    animatedTexts: [
-                      TypewriterAnimatedText("VCHD - 4 ",
-                          speed: const Duration(milliseconds: 180)),
-                      TypewriterAnimatedText("Qo'qon vagon deposi",
-                          speed: const Duration(milliseconds: 180)),
-                      TypewriterAnimatedText(
-                          "Ta'mir sexlaridan ehtiyot qismlar uchun online buyurtma olish dasturi",
-                          speed: const Duration(milliseconds: 180)),
-                      TypewriterAnimatedText(
-                          "Ushbu dastur sinov tariqasida ishlamoqda",
-                          speed: const Duration(milliseconds: 180)),
-                    ],
-                    onTap: () {},
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                            icon: const Icon(Icons.list),
+                            onPressed: () {
+                              Navigator.pushNamed(context, ZakazlarScreen.id);
+                            },
+                            label: const Text("Buyurtmalar ro'yxati")),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: NetworkImage(
+                                    "https://259506.selcdn.ru/sites-static/site812817/321cc7a3-9130-4b20-9052-b45a3393a06e/321cc7a3-9130-4b20-9052-b45a3393a06e-6378475.jpeg"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(15),
+                            border:
+                                Border.all(color: Colors.grey.shade700, width: 2),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                          
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              Navigator.pushNamed(context, LoginPage.id);
+                            },
+                            label: const Text("Maxsulot qo'shish")),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: NetworkImage(
+                                    "https://259506.selcdn.ru/sites-static/site812817/321cc7a3-9130-4b20-9052-b45a3393a06e/321cc7a3-9130-4b20-9052-b45a3393a06e-6378475.jpeg"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(15),
+                            border:
+                                Border.all(color: Colors.grey.shade700, width: 2),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                          
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              Navigator.pushNamed(context, OrdersPage.id);
+                            },
+                            label: const Text("Buyurtmalar tarixi")),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                SizedBox(
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 50.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                    child: AnimatedTextKit(
+                      repeatForever: true,
+                      pause: const Duration(seconds: 3),
+                      animatedTexts: [
+                        TypewriterAnimatedText("VCHD - 4 ",
+                            speed: const Duration(milliseconds: 180)),
+                        TypewriterAnimatedText("Qo'qon vagon deposi",
+                            speed: const Duration(milliseconds: 180)),
+                        TypewriterAnimatedText(
+                            "Ta'mir sexlaridan ehtiyot qismlar uchun online buyurtma olish dasturi",
+                            speed: const Duration(milliseconds: 180)),
+                        TypewriterAnimatedText(
+                            "Ushbu dastur sinov tariqasida ishlamoqda",
+                            speed: const Duration(milliseconds: 180)),
+                      ],
+                      onTap: () {},
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
   }

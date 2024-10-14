@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318190260193",
+    "project_id": "vchd-tablo-new",
+    "storage_bucket": "vchd-tablo-new.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318190260193:android:983131fe12136f8806cca0",
+        "android_client_info": {
+          "package_name": "com.example.vchd_tablo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo6uUW6daAx_VoPgeismasRv-jBgD4fvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

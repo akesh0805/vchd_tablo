@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "vchd_tablo"
+location: "asia-south1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "vchd_tablo_fdc"
+      cloudSql:
+        instanceId: "vchd_tablo-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
